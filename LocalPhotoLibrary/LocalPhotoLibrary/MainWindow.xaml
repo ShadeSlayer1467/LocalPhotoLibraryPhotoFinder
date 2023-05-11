@@ -63,9 +63,16 @@
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            <Button Grid.Row="2" Content="Select Folder" Command="{Binding SelectFolderCommand}" HorizontalAlignment="Center"/>
-
+            </ItemsControl>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" Padding="5">
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Photos: " VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding Photos.Count}"/>
+                    </StackPanel>
+                </Border>
+                <Button Content="Select Folder" Command="{Binding SelectFolderCommand}" />
+            </StackPanel>
         </Grid>
     </Grid>
 </Window>

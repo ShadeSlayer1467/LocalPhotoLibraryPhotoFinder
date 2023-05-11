@@ -56,7 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="IPhoto.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="TestPhoto.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,7 +74,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="model.cs" />
+    <Compile Include="PhotoLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,16 +99,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\IPhoto\IPhoto.csproj">
-      <Project>{12e4a6b2-55cf-4689-9bed-4d1445ee5907}</Project>
-      <Name>IPhoto</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LocalPhotosLib\LocalPhotosLib.csproj">
-      <Project>{b08deb88-cb0c-42d3-8bee-c46dbda287c4}</Project>
-      <Name>LocalPhotosLib</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

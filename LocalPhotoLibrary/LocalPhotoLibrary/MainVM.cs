@@ -23,13 +23,14 @@ namespace LocalPhotoLibrary
         }
         #endregion
         #region Properties
-        private int _selectedPhotoIndex;
+
+        private int selectedPhotoIndex;
         public int SelectedPhotoIndex
         {
-            get { return _selectedPhotoIndex; }
+            get { return selectedPhotoIndex; }
             set
             {
-                _selectedPhotoIndex = value;
+                selectedPhotoIndex = value;
                 NotifyPropertyChanged();
             }
         }
@@ -44,18 +45,27 @@ namespace LocalPhotoLibrary
             }
         }
         #endregion
-        MainModel model { get; set; }
+        PhotoLoader model { get; set; }
         public ObservableCollection<Photo> Photos { get; set; }
         public ICommand LoadPCPhotos { get; private set; }
         public ICommand SelectFolderCommand { get; private set; }
 
+        private async void StartConsumer()
+        {
+            await Task.Run(() =>
+            {
+                foreach (var path in model.photoPathsQueue.GetConsumingEnumerable())
+                {
+                    var photo = new Photo { URL = path };
+                    model.LoadMetaData(photo);
+                    Application.Current.Dispatcher.Invoke(() => Photos.Add(photo));
+                }
+            });
+        }
+
         private void UpdatePhotosFromPC()
         {
-            Photos.Clear();
-            List<Photo> modelPhotos = model.GetPhotos(LocalPhotoPath);
-            modelPhotos.ForEach(x => Photos.Add(x));
-
-            if (Photos.Count > 0) SelectedPhotoIndex = 0;
+            model.ProducePhotoPaths(LocalPhotoPath);
         }
         private void SelectFolder()
         {
@@ -73,11 +83,12 @@ namespace LocalPhotoLibrary
         public MainVM()
         {
             Photos = new ObservableCollection<Photo>();
-            model = new MainModel();
+            model = new PhotoLoader();
             LoadPCPhotos = new RelayCommand(UpdatePhotosFromPC);
             SelectFolderCommand = new RelayCommand(SelectFolder);
             LocalPhotoPath = "C:\\Users\\matth\\Pictures\\Dragon Wallpaper";
             UpdatePhotosFromPC();
+            StartConsumer();
         }
     }
 }
