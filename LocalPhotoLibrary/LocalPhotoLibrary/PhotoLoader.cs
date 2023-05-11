@@ -12,10 +12,11 @@ namespace LocalPhotoLibrary
 {
     public class PhotoLoader
     {
-        public BlockingCollection<string> photoPathsQueue = new BlockingCollection<string>();
+        public BlockingCollection<string> photoPathsQueue {get; set;}
 
         public void ProducePhotoPaths(string directoryPath)
         {
+            photoPathsQueue = new BlockingCollection<string>();
             if (Directory.Exists(directoryPath))
                 GetPhotoPathsRecursive(directoryPath);
             photoPathsQueue.CompleteAdding();

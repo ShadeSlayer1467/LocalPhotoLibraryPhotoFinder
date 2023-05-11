@@ -52,13 +52,14 @@ namespace LocalPhotoLibrary
 
         private async void StartConsumer()
         {
+            Photos.Clear();
             await Task.Run(() =>
             {
                 foreach (var path in model.photoPathsQueue.GetConsumingEnumerable())
                 {
                     var photo = new Photo { URL = path };
                     model.LoadMetaData(photo);
-                    Application.Current.Dispatcher.Invoke(() => Photos.Add(photo));
+                    System.Windows.Application.Current.Dispatcher.Invoke(() => Photos.Add(photo));
                 }
             });
         }
@@ -66,6 +67,7 @@ namespace LocalPhotoLibrary
         private void UpdatePhotosFromPC()
         {
             model.ProducePhotoPaths(LocalPhotoPath);
+            StartConsumer();
         }
         private void SelectFolder()
         {
@@ -88,7 +90,6 @@ namespace LocalPhotoLibrary
             SelectFolderCommand = new RelayCommand(SelectFolder);
             LocalPhotoPath = "C:\\Users\\matth\\Pictures\\Dragon Wallpaper";
             UpdatePhotosFromPC();
-            StartConsumer();
         }
     }
 }
