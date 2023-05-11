@@ -1,5 +1,6 @@
 ﻿using MyPhoto;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,14 +12,15 @@ namespace LocalPhotoLibrary
 {
     public class PhotoLoader
     {
-        public List<string> GetPhotoPaths(string directoryPath)
+        public BlockingCollection<string> photoPathsQueue = new BlockingCollection<string>();
+
+        public void ProducePhotoPaths(string directoryPath)
         {
-            List<string> photoPaths = new List<string>();
             if (Directory.Exists(directoryPath))
-                GetPhotoPathsRecursive(directoryPath, photoPaths);
-            return photoPaths;
+                GetPhotoPathsRecursive(directoryPath);
+            photoPathsQueue.CompleteAdding();
         }
-        private void GetPhotoPathsRecursive(string directoryPath, List<string> photoPaths)
+        private void GetPhotoPathsRecursive(string directoryPath)
         {
             // Supported photo file extensions
             string[] supportedExtensions = new[] { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tiff" };
@@ -35,14 +37,14 @@ namespace LocalPhotoLibrary
                 // Iterate through the photo files and add their paths to the list
                 foreach (string photoFile in photoFiles)
                 {
-                    photoPaths.Add(photoFile);
+                    photoPathsQueue.Add(photoFile);
                 }
 
                 // Recursively search through subdirectories
                 string[] subdirectories = Directory.GetDirectories(directoryPath);
                 foreach (string subdirectory in subdirectories)
                 {
-                    GetPhotoPathsRecursive(subdirectory, photoPaths);
+                    GetPhotoPathsRecursive(subdirectory);
                 }
             }
             catch (Exception ex)
