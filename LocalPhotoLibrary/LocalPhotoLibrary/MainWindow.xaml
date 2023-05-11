@@ -14,44 +14,43 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        <StackPanel>
-            <ListBox x:Name="lstPhotos"
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <ListBox x:Name="lstPhotos"
                  ItemsSource="{Binding Photos}"
                  SelectedIndex="{Binding SelectedPhotoIndex}" 
                  Grid.Column="0"
                  MouseDoubleClick="lstPhotos_MouseDoubleClick"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     Height="auto">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Columns="3" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Viewbox Stretch="Uniform"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="3" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Viewbox Stretch="Uniform"
                              Width="auto"
                              Height="auto">
-                            <Image Source="{Binding URL}"
+                        <Image Source="{Binding URL}"
                                Width="150"
                                Height="150"
                                Stretch="Uniform"/>
-                        </Viewbox>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" Padding="5">
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Photos: " VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding Photos.Count}"/>
-                    </StackPanel>
-                </Border>
-                <Button Content="Select Folder" Command="{Binding SelectFolderCommand}" />
-            </StackPanel>
+                    </Viewbox>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,0,0" Padding="5">
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Photos: " VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding Photos.Count}"/>
+                </StackPanel>
+            </Border>
+            <Button Content="Select Folder" Command="{Binding SelectFolderCommand}" />
         </StackPanel>
-
         <!-- Grid.Column 1 (MetaData)-->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>

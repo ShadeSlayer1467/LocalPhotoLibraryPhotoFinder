@@ -44,11 +44,25 @@ namespace LocalPhotoLibrary
                 NotifyPropertyChanged();
             }
         }
+        private int photosIndex;
+
+        public int PhotosIndex
+        {
+            get { return photosIndex; }
+            set
+            {
+                photosIndex = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         #endregion
         PhotoLoader model { get; set; }
         public ObservableCollection<Photo> Photos { get; set; }
         public ICommand LoadPCPhotos { get; private set; }
         public ICommand SelectFolderCommand { get; private set; }
+        public ICommand DecrementPhotoList { get; private set; }
+        public ICommand IncrementPhotoList { get; private set; }
 
         private async void StartConsumer()
         {
