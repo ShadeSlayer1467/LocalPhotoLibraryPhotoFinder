@@ -50,22 +50,28 @@ namespace LocalPhotoLibrary
         public ICommand LoadPCPhotos { get; private set; }
         public ICommand SelectFolderCommand { get; private set; }
 
-        private async void StartConsumer()
+        private async void UpdatePhotosFromPC()
         {
-            await Task.Run(() =>
+            Photos.Clear();
+            List<string> photoPaths = model.GetPhotoPaths(LocalPhotoPath);
+            foreach (var path in photoPaths)
             {
-                foreach (var path in model.photoPathsQueue.GetConsumingEnumerable())
+                var photo = new Photo { URL = path };
+                await Task.Run(() => model.LoadMetaData(photo));
+                if (photo != null)
                 {
-                    var photo = new Photo { URL = path };
-                    model.LoadMetaData(photo);
-                    Application.Current.Dispatcher.Invoke(() => Photos.Add(photo));
+                    try
+                    {
+                        Photos.Add(photo);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to add photo to the list: {ex.ToString()}");
+                    }
                 }
-            });
-        }
+            }
 
-        private void UpdatePhotosFromPC()
-        {
-            model.ProducePhotoPaths(LocalPhotoPath);
+            if (Photos.Count > 0) SelectedPhotoIndex = 0;
         }
         private void SelectFolder()
         {
@@ -88,7 +94,6 @@ namespace LocalPhotoLibrary
             SelectFolderCommand = new RelayCommand(SelectFolder);
             LocalPhotoPath = "C:\\Users\\matth\\Pictures\\Dragon Wallpaper";
             UpdatePhotosFromPC();
-            StartConsumer();
         }
     }
 }
